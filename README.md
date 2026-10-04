@@ -5,7 +5,7 @@ verified in simulation, and deployed to a Xilinx FPGA. It runs a variable
 block-size motion estimation (VBSME) program written in MIPS assembly and
 reports the best-match location for each test frame on the board's display.
 
-Built by a three-person team in a university computer architecture course
+Built off of my initial 3-person team project in a university computer architecture course
 (Fall 2025). Each source file lists who worked on it.
 
 <!-- Add a block diagram here: docs/pipeline.png -->

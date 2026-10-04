@@ -1,0 +1,171 @@
+23bdfffc	//	main:		addi	$sp, $sp, -4 ->	main:		addi	$sp, $sp, -4
+afbf0000	//			sw	$ra, 0($sp) ->			sw	$ra, 0($sp)
+20040000	//			addi	$a0, $zero, 0 ->			addi	$a0, $zero, 0
+20050010	//			addi	$a1, $zero, 16 ->			addi	$a1, $zero, 16
+20060410	//			addi	$a2, $zero, 1040 ->			addi	$a2, $zero, 1040
+0c00001a	//			jal	vbsme ->			jal	vbsme
+20040490	//			addi	$a0, $zero, 1168 ->			addi	$a0, $zero, 1168
+200504a0	//			addi	$a1, $zero, 1184 ->			addi	$a1, $zero, 1184
+200614a0	//			addi	$a2, $zero, 5280 ->			addi	$a2, $zero, 5280
+0c00001a	//			jal	vbsme ->			jal	vbsme
+200416a0	//			addi	$a0, $zero, 5792 ->			addi	$a0, $zero, 5792
+200516b0	//			addi	$a1, $zero, 5808 ->			addi	$a1, $zero, 5808
+20061ab0	//			addi	$a2, $zero, 6832 ->			addi	$a2, $zero, 6832
+0c00001a	//			jal	vbsme ->			jal	vbsme
+20041b30	//			addi	$a0, $zero, 6960 ->			addi	$a0, $zero, 6960
+20051b40	//			addi	$a1, $zero, 6976 ->			addi	$a1, $zero, 6976
+20061f40	//			addi	$a2, $zero, 8000 ->			addi	$a2, $zero, 8000
+0c00001a	//			jal	vbsme ->			jal	vbsme
+20042040	//			addi	$a0, $zero, 8256 ->			addi	$a0, $zero, 8256
+20052050	//			addi	$a1, $zero, 8272 ->			addi	$a1, $zero, 8272
+20063050	//			addi	$a2, $zero, 12368 ->			addi	$a2, $zero, 12368
+0c00001a	//			jal	vbsme ->			jal	vbsme
+8fbf0000	//			lw	$ra, 0($sp) ->			lw	$ra, 0($sp)
+23bd0004	//			addi	$sp, $sp, 4 ->			addi	$sp, $sp, 4
+08000019	//			j	end_program ->			j	end_program
+08000019	//	end_program:	j	end_program ->	end_program:	j	end_program
+20020000	//	vbsme:		addi	$v0, $zero, 0 ->	vbsme:		addi	$v0, $zero, 0
+20030000	//			addi	$v1, $zero, 0 ->			addi	$v1, $zero, 0
+23bdffb0	//			addi	$sp, $sp, -80 ->			addi	$sp, $sp, -80
+afbf0000	//			sw	$ra, 0($sp) ->			sw	$ra, 0($sp)
+afa50014	//			sw	$a1, 20($sp) ->			sw	$a1, 20($sp)
+afa60018	//			sw	$a2, 24($sp) ->			sw	$a2, 24($sp)
+8c880000	//			lw	$t0, 0($a0) ->			lw	$t0, 0($a0)
+8c890004	//			lw	$t1, 4($a0) ->			lw	$t1, 4($a0)
+8c8a0008	//			lw	$t2, 8($a0) ->			lw	$t2, 8($a0)
+8c8b000c	//			lw	$t3, 12($a0) ->			lw	$t3, 12($a0)
+afa80004	//			sw	$t0, 4($sp) ->			sw	$t0, 4($sp)
+afa90008	//			sw	$t1, 8($sp) ->			sw	$t1, 8($sp)
+afaa000c	//			sw	$t2, 12($sp) ->			sw	$t2, 12($sp)
+afab0010	//			sw	$t3, 16($sp) ->			sw	$t3, 16($sp)
+3c0c7fff	//			lui	$t4, 0x7fff ->			lui	$t4, 0x7fff
+358cffff	//			ori	$t4, $t4, 0xffff ->			ori	$t4, $t4, 0xffff
+afac002c	//			sw	$t4, 44($sp) ->			sw	$t4, 44($sp)
+afa00030	//			sw	$zero, 48($sp) ->			sw	$zero, 48($sp)
+afa00034	//			sw	$zero, 52($sp) ->			sw	$zero, 52($sp)
+010a6822	//			sub	$t5, $t0, $t2 ->			sub	$t5, $t0, $t2
+21ad0001	//			addi	$t5, $t5, 1 ->			addi	$t5, $t5, 1
+afad001c	//			sw	$t5, 28($sp) ->			sw	$t5, 28($sp)
+012b7022	//			sub	$t6, $t1, $t3 ->			sub	$t6, $t1, $t3
+21ce0001	//			addi	$t6, $t6, 1 ->			addi	$t6, $t6, 1
+afae0020	//			sw	$t6, 32($sp) ->			sw	$t6, 32($sp)
+afa00024	//			sw	$zero, 36($sp) ->			sw	$zero, 36($sp)
+01aec020	//			add	$t8, $t5, $t6 ->			add	$t8, $t5, $t6
+2318fffe	//			addi	$t8, $t8, -2 ->			addi	$t8, $t8, -2
+afb80028	//			sw	$t8, 40($sp) ->			sw	$t8, 40($sp)
+8fae0024	//	ZZ_OUTER_S:	lw	$t6, 36($sp) ->	ZZ_OUTER_S:	lw	$t6, 36($sp)
+8faf0028	//			lw	$t7, 40($sp) ->			lw	$t7, 40($sp)
+01eec82a	//			slt	$t9, $t7, $t6 ->			slt	$t9, $t7, $t6
+17200032	//			bne	$t9, $zero, ZZ_DONE ->			bne	$t9, $zero, ZZ_DONE
+8fad001c	//			lw	$t5, 28($sp) ->			lw	$t5, 28($sp)
+8fac0020	//			lw	$t4, 32($sp) ->			lw	$t4, 32($sp)
+2199ffff	//			addi	$t9, $t4, -1 ->			addi	$t9, $t4, -1
+01d95022	//			sub	$t2, $t6, $t9 ->			sub	$t2, $t6, $t9
+0140c82a	//			slt	$t9, $t2, $zero ->			slt	$t9, $t2, $zero
+13200001	//			beq	$t9, $zero, ZZ_RMIN_OK ->			beq	$t9, $zero, ZZ_RMIN_OK
+00005020	//			add	$t2, $zero, $zero ->			add	$t2, $zero, $zero
+21b9ffff	//	ZZ_RMIN_OK:	addi	$t9, $t5, -1 ->	ZZ_RMIN_OK:	addi	$t9, $t5, -1
+01c05820	//			add	$t3, $t6, $zero ->			add	$t3, $t6, $zero
+032bc02a	//			slt	$t8, $t9, $t3 ->			slt	$t8, $t9, $t3
+13000001	//			beq	$t8, $zero, ZZ_RMAX_OK ->			beq	$t8, $zero, ZZ_RMAX_OK
+03205820	//			add	$t3, $t9, $zero ->			add	$t3, $t9, $zero
+afaa0048	//	ZZ_RMAX_OK:	sw	$t2, 72($sp) ->	ZZ_RMAX_OK:	sw	$t2, 72($sp)
+afab004c	//			sw	$t3, 76($sp) ->			sw	$t3, 76($sp)
+31d80001	//			andi	$t8, $t6, 1 ->			andi	$t8, $t6, 1
+1700000f	//			bne	$t8, $zero, ZZ_ODD ->			bne	$t8, $zero, ZZ_ODD
+8fb8004c	//			lw	$t8, 76($sp) ->			lw	$t8, 76($sp)
+8faa0048	//	ZZ_EVEN_LOOP:	lw	$t2, 72($sp) ->	ZZ_EVEN_LOOP:	lw	$t2, 72($sp)
+030ac82a	//			slt	$t9, $t8, $t2 ->			slt	$t9, $t8, $t2
+1720001a	//			bne	$t9, $zero, ZZ_AFTER_DIAG ->			bne	$t9, $zero, ZZ_AFTER_DIAG
+8fae0024	//			lw	$t6, 36($sp) ->			lw	$t6, 36($sp)
+01d8c822	//			sub	$t9, $t6, $t8 ->			sub	$t9, $t6, $t8
+afae0024	//			sw	$t6, 36($sp) ->			sw	$t6, 36($sp)
+afb80038	//			sw	$t8, 56($sp) ->			sw	$t8, 56($sp)
+afb9003c	//			sw	$t9, 60($sp) ->			sw	$t9, 60($sp)
+0c000072	//			jal	FIND_ADDRESS ->			jal	FIND_ADDRESS
+0c000088	//			jal	CALC_SAD ->			jal	CALC_SAD
+0c00007c	//			jal	UPDATE_MIN ->			jal	UPDATE_MIN
+8fb80038	//			lw	$t8, 56($sp) ->			lw	$t8, 56($sp)
+2318ffff	//			addi	$t8, $t8, -1 ->			addi	$t8, $t8, -1
+0800004c	//			j	ZZ_EVEN_LOOP ->			j	ZZ_EVEN_LOOP
+8fb80048	//	ZZ_ODD:		lw	$t8, 72($sp) ->	ZZ_ODD:		lw	$t8, 72($sp)
+8fab004c	//	ZZ_ODD_LOOP:	lw	$t3, 76($sp) ->	ZZ_ODD_LOOP:	lw	$t3, 76($sp)
+0178c82a	//			slt	$t9, $t3, $t8 ->			slt	$t9, $t3, $t8
+1720000b	//			bne	$t9, $zero, ZZ_AFTER_DIAG ->			bne	$t9, $zero, ZZ_AFTER_DIAG
+8fae0024	//			lw	$t6, 36($sp) ->			lw	$t6, 36($sp)
+01d8c822	//			sub	$t9, $t6, $t8 ->			sub	$t9, $t6, $t8
+afae0024	//			sw	$t6, 36($sp) ->			sw	$t6, 36($sp)
+afb80038	//			sw	$t8, 56($sp) ->			sw	$t8, 56($sp)
+afb9003c	//			sw	$t9, 60($sp) ->			sw	$t9, 60($sp)
+0c000072	//			jal	FIND_ADDRESS ->			jal	FIND_ADDRESS
+0c000088	//			jal	CALC_SAD ->			jal	CALC_SAD
+0c00007c	//			jal	UPDATE_MIN ->			jal	UPDATE_MIN
+8fb80038	//			lw	$t8, 56($sp) ->			lw	$t8, 56($sp)
+23180001	//			addi	$t8, $t8, 1 ->			addi	$t8, $t8, 1
+0800005b	//			j	ZZ_ODD_LOOP ->			j	ZZ_ODD_LOOP
+8fae0024	//	ZZ_AFTER_DIAG:	lw	$t6, 36($sp) ->	ZZ_AFTER_DIAG:	lw	$t6, 36($sp)
+21ce0001	//			addi	$t6, $t6, 1 ->			addi	$t6, $t6, 1
+afae0024	//			sw	$t6, 36($sp) ->			sw	$t6, 36($sp)
+08000037	//			j	ZZ_OUTER_S ->			j	ZZ_OUTER_S
+8fa20030	//	ZZ_DONE:	lw	$v0, 48($sp) ->	ZZ_DONE:	lw	$v0, 48($sp)
+8fa30034	//			lw	$v1, 52($sp) ->			lw	$v1, 52($sp)
+8fbf0000	//			lw	$ra, 0($sp) ->			lw	$ra, 0($sp)
+23bd0050	//			addi	$sp, $sp, 80 ->			addi	$sp, $sp, 80
+03e00008	//			jr	$ra ->			jr	$ra
+8faa0014	//	FIND_ADDRESS:	lw	$t2, 20($sp) ->	FIND_ADDRESS:	lw	$t2, 20($sp)
+8fa90008	//			lw	$t1, 8($sp) ->			lw	$t1, 8($sp)
+8fb80038	//			lw	$t8, 56($sp) ->			lw	$t8, 56($sp)
+8fb9003c	//			lw	$t9, 60($sp) ->			lw	$t9, 60($sp)
+73094002	//			mul	$t0, $t8, $t1 ->			mul	$t0, $t8, $t1
+01194020	//			add	$t0, $t0, $t9 ->			add	$t0, $t0, $t9
+00084080	//			sll	$t0, $t0, 2 ->			sll	$t0, $t0, 2
+01484020	//			add	$t0, $t2, $t0 ->			add	$t0, $t2, $t0
+afa80040	//			sw	$t0, 64($sp) ->			sw	$t0, 64($sp)
+03e00008	//			jr	$ra ->			jr	$ra
+8fa8002c	//	UPDATE_MIN:	lw	$t0, 44($sp) ->	UPDATE_MIN:	lw	$t0, 44($sp)
+8fa90044	//			lw	$t1, 68($sp) ->			lw	$t1, 68($sp)
+0109502a	//			slt	$t2, $t0, $t1 ->			slt	$t2, $t0, $t1
+15400007	//			bne	$t2, $zero, UPDATE_DONE ->			bne	$t2, $zero, UPDATE_DONE
+afa9002c	//			sw	$t1, 44($sp) ->			sw	$t1, 44($sp)
+8fab0038	//			lw	$t3, 56($sp) ->			lw	$t3, 56($sp)
+afab0030	//			sw	$t3, 48($sp) ->			sw	$t3, 48($sp)
+8fac003c	//			lw	$t4, 60($sp) ->			lw	$t4, 60($sp)
+afac0034	//			sw	$t4, 52($sp) ->			sw	$t4, 52($sp)
+01601020	//			add	$v0, $t3, $zero ->			add	$v0, $t3, $zero
+01801820	//			add	$v1, $t4, $zero ->			add	$v1, $t4, $zero
+03e00008	//	UPDATE_DONE:	jr	$ra ->	UPDATE_DONE:	jr	$ra
+8fa80040	//	CALC_SAD:	lw	$t0, 64($sp) ->	CALC_SAD:	lw	$t0, 64($sp)
+8fad0018	//			lw	$t5, 24($sp) ->			lw	$t5, 24($sp)
+8fac0008	//			lw	$t4, 8($sp) ->			lw	$t4, 8($sp)
+8fb9000c	//			lw	$t9, 12($sp) ->			lw	$t9, 12($sp)
+8fab0010	//			lw	$t3, 16($sp) ->			lw	$t3, 16($sp)
+20090000	//			addi	$t1, $zero, 0 ->			addi	$t1, $zero, 0
+200e0000	//			addi	$t6, $zero, 0 ->			addi	$t6, $zero, 0
+01d9502a	//	row_loop:	slt	$t2, $t6, $t9 ->	row_loop:	slt	$t2, $t6, $t9
+11400018	//			beq	$t2, $zero, done ->			beq	$t2, $zero, done
+8fac0008	//			lw	$t4, 8($sp) ->			lw	$t4, 8($sp)
+71cc7802	//			mul	$t7, $t6, $t4 ->			mul	$t7, $t6, $t4
+000f7880	//			sll	$t7, $t7, 2 ->			sll	$t7, $t7, 2
+010f5020	//			add	$t2, $t0, $t7 ->			add	$t2, $t0, $t7
+71cb7802	//			mul	$t7, $t6, $t3 ->			mul	$t7, $t6, $t3
+000f7880	//			sll	$t7, $t7, 2 ->			sll	$t7, $t7, 2
+8fb80018	//			lw	$t8, 24($sp) ->			lw	$t8, 24($sp)
+030f6820	//			add	$t5, $t8, $t7 ->			add	$t5, $t8, $t7
+20180000	//			addi	$t8, $zero, 0 ->			addi	$t8, $zero, 0
+030b782a	//	col_loop:	slt	$t7, $t8, $t3 ->	col_loop:	slt	$t7, $t8, $t3
+11e0000b	//			beq	$t7, $zero, next_row ->			beq	$t7, $zero, next_row
+8d4f0000	//			lw	$t7, 0($t2) ->			lw	$t7, 0($t2)
+8dac0000	//			lw	$t4, 0($t5) ->			lw	$t4, 0($t5)
+01ec7822	//			sub	$t7, $t7, $t4 ->			sub	$t7, $t7, $t4
+05e00001	//			bltz	$t7, make_positive ->			bltz	$t7, make_positive
+080000a2	//			j	add_diff ->			j	add_diff
+000f7822	//	make_positive:	sub	$t7, $zero, $t7 ->	make_positive:	sub	$t7, $zero, $t7
+012f4820	//	add_diff:	add	$t1, $t1, $t7 ->	add_diff:	add	$t1, $t1, $t7
+214a0004	//			addi	$t2, $t2, 4 ->			addi	$t2, $t2, 4
+21ad0004	//			addi	$t5, $t5, 4 ->			addi	$t5, $t5, 4
+23180001	//			addi	$t8, $t8, 1 ->			addi	$t8, $t8, 1
+0800009a	//			j	col_loop ->			j	col_loop
+21ce0001	//	next_row:	addi	$t6, $t6, 1 ->	next_row:	addi	$t6, $t6, 1
+0800008f	//			j	row_loop ->			j	row_loop
+afa90044	//	done:		sw	$t1, 68($sp) ->	done:		sw	$t1, 68($sp)
+03e00008	//			jr	$ra ->			jr	$ra

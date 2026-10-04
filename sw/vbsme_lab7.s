@@ -1,0 +1,674 @@
+# Fall 2025
+# Team Members: Ben Bohan, Lucius Casertano, Julia Axelrod
+# % Effort    :   33-33-33 (Lucius did zigzag logic, Julia did SAD, Ben did addresses and register management)
+#
+#   
+# 
+
+########################################################################################################################
+### data
+########################################################################################################################
+.data
+# test input
+# asize : dimensions of the frame [i, j] and window [k, l]
+#         i: number of rows,  j: number of cols
+#         k: number of rows,  l: number of cols  
+# frame : frame data with i*j number of pixel values
+# window: search window with k*l number of pixel values
+#
+# $v0 is for row / $v1 is for column
+
+
+# test 1 For the 16X16 frame size and a 8X4 window size
+# The result should be 3, 2
+asize1:  .word    16, 16, 8, 4    #i, j, k, l
+frame1:  .word    7, 8, 8, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+         .word    7, 8, 8, 8, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 
+         .word    7, 8, 8, 8, 2, 8, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 
+         .word    7, 8, 8, 8, 8, 8, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 
+         .word    0, 4, 8, 8, 8, 8, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 
+         .word    0, 5, 8, 8, 8, 8, 30, 35, 40, 45, 50, 55, 60, 65, 70,  75, 
+         .word    0, 6, 8, 8, 8, 8, 36, 42, 48, 54, 60, 66, 72, 78, 84, 90, 
+         .word    0, 4, 8, 8, 8, 8, 42, 49, 56, 63, 70, 77, 84, 91, 98, 105, 
+         .word    0, 1, 8, 8, 8, 8, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 
+         .word    0, 1, 8, 8, 8, 8, 54, 63, 72, 81, 90, 99, 108, 117, 126, 135, 
+         .word    0, 10, 8, 8, 8, 8, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 
+         .word    0, 11, 22, 33, 44, 55, 66, 77, 88, 99, 110, 121, 132, 143, 154, 165, 
+         .word    9, 9, 9, 9, 48, 60, 72, 84, 96, 108, 120, 132, 0, 1, 2, 3, 
+         .word    9, 9, 9, 9, 52, 65, 78, 91, 104, 114, 130, 143, 1, 2, 3, 4, 
+         .word    9, 9, 9, 9, 56, 70, 84, 98, 112, 126, 140, 154, 2, 3, 4, 5, 
+         .word    9, 9, 9, 9, 60, 75, 90, 105, 120, 135, 150, 165, 3, 4, 5, 6 
+window1: .word    8, 8, 8, 8, 
+         .word    8, 8, 8, 8, 
+         .word    8, 8, 8, 8, 
+         .word    8, 8, 8, 8, 
+         .word    8, 8, 8, 8, 
+         .word    8, 8, 8, 8, 
+         .word    8, 8, 8, 8, 
+         .word    8, 8, 8, 8 
+
+
+# test 2 For the 32X32 frame and a 8X16 window size
+# The result should be 16, 0
+asize2:  .word    32, 32, 8, 16    #i, j, k, l
+frame2:  .word    1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 
+         .word    1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 
+         .word    1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 
+         .word    1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 
+         .word    1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 
+         .word    1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 
+         .word    1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 
+         .word    1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 
+         .word    1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 
+         .word    1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 
+         .word    1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 
+         .word    1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 
+         .word    1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 
+         .word    1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 
+         .word    1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 
+         .word    1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 
+         .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 
+         .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 
+         .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 
+         .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 
+         .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 
+         .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 
+         .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 
+         .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 
+         .word    1, 1, 1, 1, 1, 10, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 
+         .word    1, 1, 1, 1, 1, 10, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 
+         .word    1, 1, 1, 1, 1, 10, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 
+         .word    1, 1, 1, 1, 1, 10, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 
+         .word    1, 1, 1, 1, 1, 10, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 
+         .word    1, 1, 1, 1, 1, 10, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 
+         .word    1, 1, 1, 1, 1, 10, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 
+         .word    1, 1, 1, 1, 1, 10, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8
+         
+window2: .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+         .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+         .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+         .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+         .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+         .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+         .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+         .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+         
+
+# test 3 For the 16X16 frame and a 4X8 window size
+# The result should be 12, 0
+asize3:  .word    16, 16, 4, 8    #i, j, k, l
+frame3:  .word    9, 9, 9, 9, 0, 0, 0, 0, 0, 0, 0, 0, 6, 7, 7, 7, 
+         .word    9, 7, 7, 7, 7, 5, 6, 7, 8, 9, 10, 11, 6, 7, 7, 7, 
+         .word    9, 7, 7, 7, 7, 3, 12, 14, 16, 18, 20, 6, 6, 7, 7, 7, 
+         .word    9, 7, 7, 7, 7, 4, 18, 21, 24, 27, 30, 33, 6, 7, 7, 7, 
+         .word    0, 7, 7, 7, 7, 5, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 
+         .word    0, 5, 3, 4, 5, 6, 30, 35, 40, 45, 50, 55, 60, 65, 70,  75, 
+         .word    0, 6, 12, 18, 24, 30, 36, 42, 48, 54, 60, 66, 72, 78, 84, 90, 
+         .word    0, 4, 14, 21, 28, 35, 42, 49, 56, 63, 70, 77, 84, 91, 98, 105, 
+         .word    0, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 
+         .word    0, 9, 18, 27, 36, 45, 54, 63, 72, 81, 90, 99, 108, 117, 126, 135, 
+         .word    0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 
+         .word    0, 11, 22, 33, 44, 55, 66, 77, 88, 99, 110, 121, 132, 143, 154, 165, 
+         .word    9, 9, 9, 9, 9, 9, 9, 9, 96, 108, 120, 132, 0, 1, 2, 3, 
+         .word    9, 9, 9, 9, 9, 9, 9, 9, 96, 108, 120, 132, 0, 1, 2, 3, 
+         .word    9, 9, 9, 9, 9, 9, 9, 9, 96, 108, 120, 132, 0, 1, 2, 3, 
+         .word    9, 9, 9, 9, 9, 9, 9, 9, 96, 108, 120, 132, 0, 1, 2, 3
+         
+window3: .word    9, 9, 9, 9, 9, 9, 9, 9, 
+         .word    9, 9, 9, 9, 9, 9, 9, 9, 
+         .word    9, 9, 9, 9, 9, 9, 9, 9, 
+         .word    9, 9, 9, 9, 9, 9, 9, 9
+
+
+                  
+# test 4 For the 16X16 frame and a 8X8 window size
+# The result should be 8, 3
+asize4: .word    16, 16, 8, 8    #i, j, k, l
+frame4: .word    9, 19, 9, 9, 9, 9, 9, 9, 96, 108, 120, 132, 0, 1, 2, 3, 
+         .word    9, 91, 9, 9, 9, 9, 9, 9, 96, 108, 120, 132, 0, 1, 2, 3, 
+         .word    9, 9, 19, 9, 9, 9, 9, 9, 96, 108, 120, 132, 0, 1, 2, 3, 
+         .word    9, 9, 91, 9, 9, 9, 9, 9, 96, 108, 120, 132, 0, 1, 2, 3, 
+         .word    91, 9, 9, 9, 9, 9, 9, 9, 96, 108, 120, 132, 0, 1, 2, 3, 
+         .word    9, 19, 9, 9, 9, 9, 9, 9, 96, 108, 120, 132, 0, 1, 2, 3, 
+         .word    9, 91, 9, 9, 9, 9, 9, 9, 96, 108, 120, 132, 0, 1, 2, 3, 
+         .word    1, 2, 3, 9, 9, 19, 9, 9, 9, 9, 9, 96, 108, 120, 132, 0, 
+         .word    1, 2, 3, 9, 9, 9, 9, 9, 9, 9, 9, 96, 108, 120, 132, 0, 
+         .word    1, 2, 3, 9, 9, 9, 9, 9, 9, 9, 9, 96, 108, 120, 132, 0, 
+         .word    1, 2, 3, 9, 9, 9, 9, 9, 9, 9, 9, 96, 108, 120, 132, 0, 
+         .word    1, 2, 3, 9, 9, 9, 9, 9, 9, 9, 9, 96, 108, 120, 132, 0, 
+         .word    1, 2, 3, 9, 9, 9, 9, 9, 9, 9, 9, 96, 108, 120, 132, 0, 
+         .word    1, 2, 3, 9, 9, 9, 9, 9, 9, 9, 9, 96, 108, 120, 132, 0, 
+         .word    1, 2, 3, 9, 9, 9, 9, 9, 9, 9, 9, 96, 108, 120, 132, 0, 
+         .word    1, 2, 3, 9, 9, 9, 9, 9, 9, 9, 9, 96, 108, 120, 132, 0
+                  
+window4:   .word    9, 9, 9, 9, 9, 9, 9, 9, 
+            .word    9, 9, 9, 9, 9, 9, 9, 9, 
+            .word    9, 9, 9, 9, 9, 9, 9, 9, 
+            .word    9, 9, 9, 9, 9, 9, 9, 9, 
+            .word    9, 9, 9, 9, 9, 9, 9, 9, 
+            .word    9, 9, 9, 9, 9, 9, 9, 9, 
+            .word    9, 9, 9, 9, 9, 9, 9, 9, 
+            .word    9, 9, 9, 9, 9, 9, 9, 9
+   
+
+# test 5 For the 32X32 frame and a 4X4 window size
+# The result should be 17, 16 since the updated SAD location condition is SAD <= currentMinimum (less OR EQUAL)
+asize5: .word    32, 32, 4, 4    #i, j, k, l
+frame5: .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+         .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+         .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+         .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+         .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+         .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 10, 10, 10, 10, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 
+         .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 10, 10, 10, 10, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 
+         .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 10, 10, 10, 10, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 
+         .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 10, 10, 10, 10, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 
+         .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 10, 10, 10, 10, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 
+         .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 10, 10, 10, 10, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 
+         .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 10, 10, 10, 10, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 
+         .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 10, 10, 10, 10, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 
+         .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 10, 10, 10, 10, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 
+         .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 10, 10, 10, 10, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 
+         .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 10, 10, 10, 10, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 
+         .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 10, 10, 10, 10, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 
+         .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 10, 10, 10, 10, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 
+         .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 10, 10, 10, 10, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 
+         .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 
+         .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 
+         .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+         .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+         .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+         .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+         .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+         .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+         .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+         .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+         .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+         .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+         .word    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+                  
+window5:   .word    10, 10, 10, 10, 
+            .word    10, 10, 10, 10, 
+            .word    10, 10, 10, 10, 
+            .word    10, 10, 10, 10
+
+
+
+
+         
+newline: .asciiz     "\n" 
+
+
+########################################################################################################################
+### main
+########################################################################################################################
+
+.text
+
+.globl main
+
+main: 
+    addi    $sp, $sp, -4    # Make space on stack
+    sw      $ra, 0($sp)     # Save return address
+         
+    # Start test 1 
+    ############################################################
+    addi    $a0, $zero, 0     # 1st parameter: address of asize1[0]
+    addi    $a1, $zero, 16    # 2nd parameter: address of frame1[0]
+    addi    $a2, $zero, 1040   # 3rd parameter: address of window1[0] 
+   
+    jal     vbsme           # call function
+ #   jal     print_result    # print results to console
+    
+    ############################################################
+    # End of test 1   
+
+   
+    # Start test 2 
+    ############################################################
+    addi    $a0, $zero, 1168     # 1st parameter: address of asize2[0]
+    addi    $a1, $zero, 1184     # 2nd parameter: address of frame2[0]
+    addi    $a2, $zero, 5280    # 3rd parameter: address of window2[0] 
+   
+    jal     vbsme           # call function
+ #   jal     print_result    # print results to console
+    ############################################################
+    # End of test 2   
+                    
+               
+    # Start test 3
+    ############################################################
+    addi    $a0, $zero, 5792     # 1st parameter: address of asize3[0]
+    addi    $a1, $zero, 5808     # 2nd parameter: address of frame3[0]
+    addi    $a2, $zero, 6832    # 3rd parameter: address of window3[0] 
+
+    jal     vbsme           # call function
+ #   jal     print_result    # print results to console 
+    ############################################################
+    # End of test 3   
+      
+      
+    # Start test 4 
+    ############################################################
+    addi    $a0, $zero, 6960     # 1st parameter: address of asize4[0]
+    addi    $a1, $zero, 6976     # 2nd parameter: address of frame4[0]
+    addi    $a2, $zero, 8000    # 3rd parameter: address of window4[0] 
+
+    jal     vbsme           # call function
+ #   jal     print_result    # print results to console
+    ############################################################
+    # End of test 4   
+   
+   
+    # Start test 5
+    ############################################################
+    addi    $a0, $zero, 8256    # 1st parameter: address of asize5[0]
+    addi    $a1, $zero, 8272    # 2nd parameter: address of frame5[0]
+    addi    $a2, $zero, 12496   # 3rd parameter: address of window5[0] 
+
+    jal     vbsme           # call function
+ #  jal     print_result    # print results to console
+    ############################################################
+    # End of test 5
+
+    lw      $ra, 0($sp)         # Restore return address
+    addi    $sp, $sp, 4         # Restore stack pointer
+    j       end_program                 # Return
+
+end_program:                    # remain in infinite loop
+	j end_program
+################### Print Result ####################################
+#print_result:
+    # Printing $v0
+ #   add     $a0, $v0, $zero     # Load $v0 for printing
+ #   li      $v0, 1              # Load the system call numbers
+ #   syscall
+   
+    # Print newline.
+ #   la      $a0, newline          # Load value for printing
+ #   li      $v0, 4                # Load the system call numbers
+ #   syscall
+   
+    # Printing $v1
+ #   add     $a0, $v1, $zero      # Load $v1 for printing
+ #   li      $v0, 1                # Load the system call numbers
+ #   syscall
+
+    # Print newline.
+ #   la      $a0, newline          # Load value for printing
+ #   li      $v0, 4                # Load the system call numbers
+ #   syscall
+   
+    # Print newline.
+ #   la      $a0, newline          # Load value for printing
+ #   li      $v0, 4                # Load the system call numbers
+ #   syscall
+   
+ #   jr      $ra                   #function return
+
+#####################################################################
+### vbsme
+#####################################################################
+
+
+# vbsme.s 
+# motion estimation is a routine in h.264 video codec that 
+# takes about 80% of the execution time of the whole code
+# given a frame(2d array, x and y dimensions can be any integer 
+# between 16 and 64) where "frame data" is stored under "frame"  
+# and a window (2d array of size 4x4, 4x8, 8x4, 8x8, 8x16, 16x8 or 16x16) 
+# where "window data" is stored under "window" 
+# and size of "window" and "frame" arrays are stored under "asize"
+
+# - initially current sum of difference is set to a very large value
+# - move "window" over the "frame" one cell at a time starting with location (0,0)
+# - moves are based on the defined search pattern
+# - for each move, function calculates  the sum of absolute difference (SAD) 
+#   between the window and the overlapping block on the frame.
+# - if the calculated sum of difference is LESS THAN the current sum of difference
+#   then the current sum of difference is updated and the coordinate of the top left corner 
+#   for that matching block in the frame is recorded. 
+ 
+
+# for example SAD of two 4x4 arrays "window" and "block" shown below is 3  
+# window         block
+# -------       --------
+# 1 2 2 3       1 4 2 3  
+# 0 0 3 2       0 0 3 2
+# 0 0 0 0       0 0 0 0 
+# 1 0 0 5       1 0 0 4
+
+# program keeps track of the window position that results 
+# with the minimum sum of absolute difference. 
+# after scannig the whole frame
+# program returns the coordinates of the block with the minimum SAD
+# in $v0 (row) and $v1 (col) 
+
+
+# Sample Inputs and Output shown below:
+# Frame:
+#
+#  0   1   2   3   0   0   0   0   0   0   0   0   0   0   0   0 
+#  1   2   3   4   4   5   6   7   8   9  10  11  12  13  14  15 
+#  2   3  32   1   2   3  12  14  16  18  20  22  24  26  28  30 
+#  3   4   1   2   3   4  18  21  24  27  30  33  36  39  42  45 
+#  0   4   2   3   4   5  24  28  32  36  40  44  48  52  56  60 
+#  0   5   3   4   5   6  30  35  40  45  50  55  60  65  70  75 
+#  0   6  12  18  24  30  36  42  48  54  60  66  72  78  84  90 
+#  0   7  14  21  28  35  42  49  56  63  70  77  84  91  98 105 
+#  0   8  16  24  32  40  48  56  64  72  80  88  96 104 112 120 
+#  0   9  18  27  36  45  54  63  72  81  90  99 108 117 126 135 
+#  0  10  20  30  40  50  60  70  80  90 100 110 120 130 140 150 
+#  0  11  22  33  44  55  66  77  88  99 110 121 132 143 154 165 
+#  0  12  24  36  48  60  72  84  96 108 120 132   0   1   2   3 
+#  0  13  26  39  52  65  78  91 104 117 130 143   1   2   3   4 
+#  0  14  28  42  56  70  84  98 112 126 140 154   2   3   4   5 
+#  0  15  30  45  60  75  90 105 120 135 150 165   3   4   5   6 
+
+# Window:
+#  0   1   2   3 
+#  1   2   3   4 
+#  2   3   4   5 
+#  3   4   5   6 
+
+# cord x = 12, cord y = 12 returned in $v0 and $v1 registers
+
+.text
+.globl  vbsme
+
+# Your program must follow circular search pattern.  
+
+# Preconditions:
+#   1st parameter (a0) address of the first element of the dimension info (address of asize[0])
+#   2nd parameter (a1) address of the first element of the frame array (address of frame[0][0])
+#   3rd parameter (a2) address of the first element of the window array (address of window[0][0])
+# Postconditions:	
+#   result (v0) x coordinate of the block in the frame with the minimum SAD
+#          (v1) y coordinate of the block in the frame with the minimum SAD
+
+
+# Begin subroutine
+################################
+# Dimension setup - set stack pointer and save information to the stack
+# 
+# Stack frame layout (grows downward)
+#   [sp+00]  saved $ra
+#   [sp+04]  i        (frame rows)
+#   [sp+08]  j        (frame cols)
+#   [sp+12]  k        (window rows)
+#   [sp+16]  l        (window cols)
+#   [sp+20]  frame_base (original a1)
+#   [sp+24]  window_base (original a2)
+#   [sp+28]  H
+#   [sp+32]  W
+#   [sp+36]  s         (diagonal index)
+#   [sp+40]  sMax
+#   [sp+44]  best_sad
+#   [sp+48]  best_row  (v0 target)
+#   [sp+52]  best_col  (v1 target)
+#   [sp+56]  curr_r
+#   [sp+60]  curr_c
+#   [sp+64]  curr_addr
+#   [sp+68]  curr_sad
+#   [sp+72]  r_min
+#   [sp+76]  r_max
+#
+#   Stack Total = 80 bytes
+################################
+
+vbsme:
+    
+    # Result registers cleared
+    addi      $v0, $zero, 0             # row
+    addi      $v1, $zero, 0             # col
+
+    # Stack pointer for frame
+    addi    $sp, $sp, -80       
+    sw      $ra, 0($sp)        # save return address
+
+    sw      $a1, 20($sp)       # save frame_base
+    sw      $a2, 24($sp)       # save window_base
+
+    # Load & save dimensions from asize
+    lw      $t0, 0($a0)        # t0 = i (frame rows)
+    lw      $t1, 4($a0)        # t1 = j (frame cols)
+    lw      $t2, 8($a0)        # t2 = k (window rows)
+    lw      $t3,12($a0)        # t3 = l (window cols)
+
+    sw      $t0,   4($sp)      # save i
+    sw      $t1,   8($sp)      # save j
+    sw      $t2,  12($sp)      # save k
+    sw      $t3,  16($sp)      # save l
+
+    # Save best_sad, best_row, best_col
+	lui     $t4, 0x7fff        # Load upper half
+    ori     $t4, $t4, 0xffff   # Load lower half to make 0x7fffffff 
+	sw      $t4, 44($sp)
+    sw      $zero, 48($sp)     # best_row = 0
+    sw      $zero, 52($sp)     # best_col = 0
+
+    # Calculate & save H
+    # H = i - k + 1
+    sub     $t5, $t0, $t2      # i - k
+    addi    $t5, $t5, 1        # + 1
+    sw      $t5, 28($sp)       # save H
+
+    # Calculate & save W
+    # W = j - l + 1
+    sub     $t6, $t1, $t3      # j - l
+    addi    $t6, $t6, 1        # + 1
+    sw      $t6, 32($sp)       # save W
+
+    # Initialize & save s / sMax
+    # s = 0; sMax = H + W - 2
+    sw      $zero, 36($sp)     # initialize s = 0, store on stack
+    add     $t8, $t5, $t6      # t8 = H + W
+    addi    $t8, $t8, -2       # subtract 2 → sMax = H + W - 2
+    sw      $t8, 40($sp)       # save sMax on stack
+
+ZZ_OUTER_S:
+    # Load s and sMax from stack for this diagonal
+    lw      $t6, 36($sp)       # t6 = s
+    lw      $t7, 40($sp)       # t7 = sMax
+
+    # stop if s > sMax
+    slt     $t9, $t7, $t6      # t9=1 if sMax < s
+    bne     $t9, $zero, ZZ_DONE
+
+    # Load H and W from the stack
+    lw      $t5, 28($sp)       # t5 = H
+    lw      $t4, 32($sp)       # t4 = W
+
+    # r_min = max(0, s-(W-1))
+    # r_max = min(s, H-1)
+    addi    $t9, $t4, -1       # t9 = (W-1)
+    sub     $t2, $t6, $t9      # t2 = s - (W-1)
+    slt     $t9, $t2, $zero    # if t2<0 → r_min=0
+    beq     $t9, $zero, ZZ_RMIN_OK
+    add     $t2, $zero, $zero  # r_min = 0
+
+ZZ_RMIN_OK:
+    addi    $t9, $t5, -1       # t9 = (H-1)
+    add     $t3, $t6, $zero    # t3 = s
+    slt     $t8, $t9, $t3      # if (H-1) < s
+    beq     $t8, $zero, ZZ_RMAX_OK
+    add     $t3, $t9, $zero    # r_max = H-1
+
+ZZ_RMAX_OK:
+    # Save r_min and r_max to the stack
+    sw      $t2, 72($sp)       # r_min
+    sw      $t3, 76($sp)       # r_max
+
+    # Even diagonal (s even): walk r = r_max..r_min  (up-right)
+    # Odd  diagonal (s odd) : walk r = r_min..r_max  (down-left)
+    andi    $t8, $t6, 1        # t8 = s & 1
+    bne     $t8, $zero, ZZ_ODD
+
+    # EVEN s: r = r_max..r_min
+    lw      $t8, 76($sp)       # r = r_max
+   
+ZZ_EVEN_LOOP:
+    # Reload r_min from stack
+    lw      $t2, 72($sp)       # r_min
+
+    # stop when r < r_min
+    slt     $t9, $t8, $t2      # t9=1 if r < r_min
+    bne     $t9, $zero, ZZ_AFTER_DIAG
+
+    lw      $t6, 36($sp)       # load s
+    sub     $t9, $t6, $t8      # c = s - r
+
+    # Update s, cur_r, cur_c on stack
+    sw      $t6, 36($sp)       # keep s current on stack
+    sw      $t8, 56($sp)       # cur_r
+    sw      $t9, 60($sp)       # cur_c
+
+    jal FIND_ADDRESS
+    jal CALC_SAD
+    jal UPDATE_MIN
+
+    lw      $t8, 56($sp)       # load r
+    addi    $t8, $t8, -1       # r--
+    j       ZZ_EVEN_LOOP
+
+ZZ_ODD:
+    lw      $t8, 72($sp)       # r = r_min
+
+ZZ_ODD_LOOP:
+    # Load r_max from stack
+    lw      $t3, 76($sp)       # r_max
+
+    # stop when r > r_max
+    slt     $t9, $t3, $t8      # t9=1 if r_max < r
+    bne     $t9, $zero, ZZ_AFTER_DIAG
+
+    lw      $t6, 36($sp)       # load s
+    sub     $t9, $t6, $t8      # c = s - r
+
+    # Update s, cur_r, cur_c on stack
+    sw      $t6, 36($sp)       # s
+    sw      $t8, 56($sp)       # cur_r
+    sw      $t9, 60($sp)       # cur_c
+
+    jal FIND_ADDRESS
+    jal CALC_SAD
+    jal UPDATE_MIN
+
+    # Restore r,s from stack
+    lw      $t8, 56($sp)       # r
+    addi    $t8, $t8, 1        # r++
+    j       ZZ_ODD_LOOP
+
+ZZ_AFTER_DIAG:
+    lw      $t6, 36($sp)       # load s
+    addi    $t6, $t6, 1        # s++
+    sw      $t6, 36($sp)       # store s++
+    j       ZZ_OUTER_S
+
+ZZ_DONE:
+    # return best (x,y) found
+    lw      $v0, 48($sp)       # row
+    lw      $v1, 52($sp)       # col
+
+    # Restore RA & Stack
+    lw      $ra, 0($sp)
+    addi    $sp, $sp, 80
+
+    jr      $ra
+    
+FIND_ADDRESS:
+    # Load inputs from the agreed stack slots
+    lw   $t2, 20($sp)          # t2 = frame_base
+    lw   $t1,  8($sp)          # t1 = j (frame cols)
+    lw   $t8, 56($sp)          # t8 = r
+    lw   $t9, 60($sp)          # t9 = c
+
+    # Find address
+    mul  $t0, $t8, $t1         # t0 = r * j
+    add  $t0, $t0, $t9         # t0 = r*j + c
+    sll  $t0, $t0, 2           # *4 for byte offset
+    add  $t0, $t2, $t0         # t0 = &frame[r][c]
+
+    # Update address in stack
+    sw   $t0, 64($sp)
+    jr   $ra
+    
+UPDATE_MIN:
+    lw   $t0, 44($sp)          # t0 = best_sad
+    lw   $t1, 68($sp)          # t1 = curr_sad
+
+    slt     $t2, $t0, $t1      # if (best_sad < curr_sad)
+    bne     $t2, $zero, UPDATE_DONE
+    
+    # Update best_sad, row, col, in stack
+    sw   $t1, 44($sp)          # best_sad = curr_sad
+    lw   $t3, 56($sp)          # r
+    sw   $t3, 48($sp)          # best_row = r
+    lw   $t4, 60($sp)          # c
+    sw   $t4, 52($sp)          # best_col = c
+
+	add  $v0, $t3, $zero       # Copy best_row to $v0 (Register 2)
+    add  $v1, $t4, $zero	   # Copy best_col to $v1 (Register 3)
+UPDATE_DONE:
+    jr      $ra
+
+CALC_SAD:
+    # Load values from stack
+    lw   $t0, 64($sp)          # t0 = frame_block_base (&frame[r][c])
+    lw   $t5, 24($sp)          # t5 = window_base
+    lw   $t4,  8($sp)          # t4 = j (frame cols)
+    lw   $t9, 12($sp)          # t9 = k (window rows / height)
+    lw   $t3, 16($sp)          # t3 = l (window cols / width) 
+    
+    addi   $t1, $zero, 0       # sum = 0
+    addi   $t6, $zero, 0       # i = 0 (row index)
+    
+row_loop:
+    slt  $t2, $t6, $t9         # t2 = (i < k)
+    beq  $t2, $zero, done
+    
+    # compute base address for this row in frame and window
+    lw   $t4,  8($sp)
+    mul  $t7, $t6, $t4         # i * j
+    sll  $t7, $t7, 2           # multiply by 4 to get byte offset
+    add  $t2, $t0, $t7         # frame_row = frame_base + (i*j)
+    
+    mul  $t7, $t6, $t3         # i * l
+    sll  $t7, $t7, 2           # multiply by 4 to get byte offset
+    lw   $t8, 24($sp)          # t8 = window_base (reload)
+    add $t5, $t8, $t7          # t5 = win_row_ptr
+    
+    addi   $t8, $zero, 0       # col = 0
+    
+col_loop:
+    slt  $t7, $t8, $t3         # t7 = (col < l)
+    beq  $t7, $zero, next_row
+
+    # Load frame and window elements from pointers
+    lw   $t7, 0($t2)           # t7 = frame[i][col]
+    lw   $t4, 0($t5)           # t4 = window[i][col] (reusing t4 as temp)     
+    
+    sub  $t7, $t7, $t4         # difference = frame - window
+    bltz $t7, make_positive
+    j    add_diff
+    
+make_positive:
+    sub  $t7, $zero, $t7       # difference = -difference
+    
+add_diff:
+    add $t1, $t1, $t7          # sum += diff
+    
+    addi $t2, $t2, 4           # frame_ptr += 4
+    addi $t5, $t5, 4           # win_ptr   += 4
+    addi $t8, $t8, 1           # col++
+    
+    j    col_loop
+    
+next_row:
+    addi $t6, $t6, 1           # i++
+    j    row_loop
+done:
+    # Update SAD in stack
+    sw   $t1, 68($sp)
+    jr   $ra
+   
